@@ -36,7 +36,7 @@ def main():
         instance_type=args.instance_type,
         instance_count=1,
         role=args.role,
-        transformers_version="4.37",
+        transformers_version="4.36",
         pytorch_version="2.1",
         py_version="py310",
         output_path=f"s3://{args.s3_bucket}/models/",

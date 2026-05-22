@@ -41,7 +41,7 @@ def main():
     huggingface_model = HuggingFaceModel(
         model_data=args.model_artifact,
         role=args.role,
-        transformers_version="4.37",
+        transformers_version="4.36",
         pytorch_version="2.1",
         py_version="py310",
         name=model_name,
