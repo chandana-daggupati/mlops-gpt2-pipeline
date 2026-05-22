@@ -32,7 +32,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install SageMaker SDK
-        run: pip install sagemaker boto3
+        run: pip install "sagemaker[huggingface]" boto3
 
       - name: Launch SageMaker training job
         id: run_training
@@ -71,7 +71,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install SageMaker SDK
-        run: pip install sagemaker boto3
+        run: pip install "sagemaker[huggingface]" boto3
 
       - name: Deploy model to endpoint
         id: deploy_model
