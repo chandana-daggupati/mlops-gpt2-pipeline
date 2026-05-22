@@ -6,6 +6,7 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
 logger = logging.getLogger(__name__)
 
+
 def model_fn(model_dir):
     logger.info(f"Loading model from: {model_dir}")
 
@@ -21,14 +22,16 @@ def model_fn(model_dir):
 
     return {"model": model, "tokenizer": tokenizer, "device": device}
 
+
 def input_fn(request_body, request_content_type):
     if request_content_type == "application/json":
         return json.loads(request_body)
-    
+
     raise ValueError(
         f"Unsupported Content-Type: '{request_content_type}'. "
         "Send requests with Content-Type: application/json"
     )
+
 
 def predict_fn(data, model_artifacts):
     model = model_artifacts["model"]
@@ -41,7 +44,8 @@ def predict_fn(data, model_artifacts):
     top_p = float(data.get("top_p", 0.9))
 
     if not prompt:
-        return {"error": "No 'prompt' field in request body.", "generated_text": ""}
+        return {"error": "No 'prompt' field in request body.",
+                "generated_text": ""}
 
     inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
@@ -63,6 +67,7 @@ def predict_fn(data, model_artifacts):
         "generated_text": generated_text,
         "tokens_generated": len(output_ids[0]) - len(inputs["input_ids"][0]),
     }
+
 
 def output_fn(prediction, accept):
     return json.dumps(prediction), "application/json"

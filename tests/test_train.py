@@ -4,6 +4,7 @@ import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
+
 class TestParseArgs:
     def test_defaults(self, monkeypatch):
         monkeypatch.setattr("sys.argv", ["train.py"])
@@ -23,6 +24,7 @@ class TestParseArgs:
         args = parse_args()
         assert args.epochs == 1
 
+
 class TestTokenizeFunction:
 
     @pytest.fixture(scope="class")
@@ -37,7 +39,8 @@ class TestTokenizeFunction:
         from train import tokenize_function
 
         long_text = "hello world " * 200
-        result = tokenize_function({"text": [long_text]}, tokenizer, max_length=32)
+        result = tokenize_function(
+            {"text": [long_text]}, tokenizer, max_length=32)
 
         assert len(result["input_ids"][0]) == 32
 
@@ -51,7 +54,7 @@ class TestTokenizeFunction:
     def test_returns_attention_mask(self, tokenizer):
         from train import tokenize_function
 
-        result = tokenize_function({"text": ["Hello there"]}, tokenizer, max_length=16)
+        result = tokenize_function(
+            {"text": ["Hello there"]}, tokenizer, max_length=16)
 
         assert "attention_mask" in result
-

@@ -5,11 +5,13 @@ import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
+
 class TestInputFn:
     def test_parses_valid_json(self):
         from inference import input_fn
 
-        payload = json.dumps({"prompt": "To be or not to be", "max_new_tokens": 50})
+        payload = json.dumps(
+            {"prompt": "To be or not to be", "max_new_tokens": 50})
         result = input_fn(payload, "application/json")
 
         assert result["prompt"] == "To be or not to be"
@@ -21,11 +23,13 @@ class TestInputFn:
         with pytest.raises(ValueError, match="Unsupported Content-Type"):
             input_fn("plain text here", "text/plain")
 
+
 class TestOutputFn:
     def test_returns_json_string_and_content_type(self):
         from inference import output_fn
 
-        prediction = {"generated_text": "To be or not to be, that is the question."}
+        prediction = {
+            "generated_text": "To be or not to be, that is the question."}
         body, content_type = output_fn(prediction, "application/json")
 
         assert content_type == "application/json"
@@ -35,15 +39,18 @@ class TestOutputFn:
     def test_output_is_valid_json(self):
         from inference import output_fn
 
-        prediction = {"prompt": "hi", "generated_text": "hi there!", "tokens_generated": 5}
+        prediction = {
+            "prompt": "hi",
+            "generated_text": "hi there!",
+            "tokens_generated": 5}
         body, _ = output_fn(prediction, "application/json")
 
         parsed = json.loads(body)
         assert "generated_text" in parsed
 
+
 @pytest.fixture(scope="module")
 def model_artifacts():
-    import torch
     from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
@@ -58,7 +65,9 @@ class TestPredictFn:
     def test_generates_text_from_prompt(self, model_artifacts):
         from inference import predict_fn
 
-        data = {"prompt": "The history of artificial intelligence", "max_new_tokens": 30}
+        data = {
+            "prompt": "The history of artificial intelligence",
+            "max_new_tokens": 30}
         result = predict_fn(data, model_artifacts)
 
         assert "generated_text" in result
@@ -70,4 +79,4 @@ class TestPredictFn:
         data = {"prompt": ""}
         result = predict_fn(data, model_artifacts)
 
-        assert "error" in result                   
+        assert "error" in result

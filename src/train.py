@@ -18,11 +18,22 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
 def parse_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--model_dir", type=str, default=os.environ.get("SM_MODEL_DIR", "./model_output"))
-    parser.add_argument("--output_data_dir", type=str, default=os.environ.get("SM_OUTPUT_DATA_DIR", "./output"))
+    parser.add_argument(
+        "--model_dir",
+        type=str,
+        default=os.environ.get(
+            "SM_MODEL_DIR",
+            "./model_output"))
+    parser.add_argument(
+        "--output_data_dir",
+        type=str,
+        default=os.environ.get(
+            "SM_OUTPUT_DATA_DIR",
+            "./output"))
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--learning_rate", type=float, default=5e-5)
     parser.add_argument("--per_device_train_batch_size", type=int, default=4)
@@ -30,6 +41,7 @@ def parse_args():
     parser.add_argument("--seed", type=int, default=42)
 
     return parser.parse_args()
+
 
 def tokenize_function(examples, tokenizer, max_length):
     return tokenizer(
@@ -39,6 +51,7 @@ def tokenize_function(examples, tokenizer, max_length):
         padding="max_length",
         return_special_tokens_mask=True,
     )
+
 
 def main():
     args = parse_args()
@@ -70,7 +83,8 @@ def main():
     # 3. Tokenize
     logger.info(f"Tokenizing (max_length={args.max_length})...")
     tokenized = dataset.map(
-        lambda examples: tokenize_function(examples, tokenizer, args.max_length),
+        lambda examples: tokenize_function(
+            examples, tokenizer, args.max_length),
         batched=True,
         remove_columns=dataset["train"].column_names,
         desc="Tokenizing",
@@ -119,6 +133,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-    
-
